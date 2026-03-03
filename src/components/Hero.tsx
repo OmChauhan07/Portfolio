@@ -1,19 +1,4 @@
-import { useEffect, useState } from 'react'
-
-const MINOR = 28
-
 export default function Hero() {
-    const [coord, setCoord] = useState('x: 0.00 · y: 0.00')
-
-    useEffect(() => {
-        const handler = (e: MouseEvent) => {
-            const cx = ((e.clientX - window.innerWidth / 2) / MINOR).toFixed(2)
-            const cy = (-(e.clientY - window.innerHeight / 2) / MINOR).toFixed(2)
-            setCoord(`x: ${cx} · y: ${cy}`)
-        }
-        window.addEventListener('mousemove', handler)
-        return () => window.removeEventListener('mousemove', handler)
-    }, [])
 
     return (
         <section
@@ -136,13 +121,7 @@ export default function Hero() {
                 </button>
             </div>
 
-            {/* Coordinate label */}
-            <span
-                className="font-courier animate-fade-in4"
-                style={{ fontSize: '0.66rem', color: 'var(--ink-faint)', marginTop: 24, letterSpacing: '0.1em' }}
-            >
-                {coord}
-            </span>
+
         </section>
     )
 }
