@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap');
+@import "tailwindcss";
+
+:root {
+  --paper: #f7f5ef;
+  --ink: #1a1612;
+  --ink-light: #4a443c;
+  --ink-faint: #9a9088;
+  --blue-accent: #3b5a9a;
+  --red-accent: #a83232;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'EB Garamond', Georgia, serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+* {
+  cursor: none !important;
+}
+
+/* Paper texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.5;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.8s ease both;
+}
+
+.animate-fade-up {
+  animation: fadeUp 0.9s ease both;
+}
+
+.animate-fade-up1 {
+  animation: fadeUp 0.9s ease 0.1s both;
+}
+
+.animate-fade-up2 {
+  animation: fadeUp 0.9s ease 0.25s both;
+}
+
+.animate-fade-up3 {
+  animation: fadeUp 0.9s ease 0.4s both;
+}
+
+.animate-fade-in4 {
+  animation: fadeIn 1s ease 0.6s both;
+}
+
+.font-garamond {
+  font-family: 'EB Garamond', Georgia, serif;
+}
+
+.font-baskerville {
+  font-family: 'Libre Baskerville', Georgia, serif;
+}
+
+.font-courier {
+  font-family: 'Courier Prime', 'Courier New', monospace;
+}
