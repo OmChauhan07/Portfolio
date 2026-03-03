@@ -1,5 +1,17 @@
 import { useEffect, useRef, useState } from 'react'
 
+const TITLES = [
+    'Python Developer',
+    'Data Engineer',
+    'Data Analyst',
+    'Data Scientist',
+    'ML Engineer',
+]
+
+const TYPE_SPEED = 60   // ms per character typed
+const ERASE_SPEED = 35   // ms per character erased
+const PAUSE_AFTER = 1400 // ms pause when fully typed
+
 interface Props {
     onDone: () => void
 }
@@ -7,6 +19,11 @@ interface Props {
 export default function IntroScreen({ onDone }: Props) {
     const [phase, setPhase] = useState<'in' | 'idle' | 'out'>('in')
     const doneRef = useRef(false)
+
+    /* ── typewriter state ── */
+    const [display, setDisplay] = useState('')
+    const [titleIdx, setTitleIdx] = useState(0)
+    const [erasing, setErasing] = useState(false)
 
     /* ── trigger exit on any scroll/wheel/touch/key ── */
     const exit = () => {
@@ -33,6 +50,33 @@ export default function IntroScreen({ onDone }: Props) {
             window.removeEventListener('keydown', exit)
         }
     }, [])
+
+    /* ── typewriter loop ── */
+    useEffect(() => {
+        const target = TITLES[titleIdx]
+        let timer: ReturnType<typeof setTimeout>
+
+        if (!erasing) {
+            if (display.length < target.length) {
+                // still typing
+                timer = setTimeout(() => setDisplay(target.slice(0, display.length + 1)), TYPE_SPEED)
+            } else {
+                // fully typed — pause then start erasing
+                timer = setTimeout(() => setErasing(true), PAUSE_AFTER)
+            }
+        } else {
+            if (display.length > 0) {
+                // still erasing
+                timer = setTimeout(() => setDisplay(d => d.slice(0, -1)), ERASE_SPEED)
+            } else {
+                // fully erased — move to next title
+                setErasing(false)
+                setTitleIdx(i => (i + 1) % TITLES.length)
+            }
+        }
+
+        return () => clearTimeout(timer)
+    }, [display, erasing, titleIdx])
 
     /* ── when exit animation ends, hand off to parent ── */
     const handleAnimEnd = () => {
@@ -100,20 +144,7 @@ export default function IntroScreen({ onDone }: Props) {
                     lineHeight: 0.92,
                 }}
             >
-                {/* chapter label above */}
-                <div
-                    className="font-courier"
-                    style={{
-                        fontSize: '0.68rem',
-                        letterSpacing: '0.28em',
-                        textTransform: 'uppercase',
-                        color: 'var(--ink-faint)',
-                        marginBottom: '2.2rem',
-                        animation: 'introFadeUp 0.7s ease 0.2s both',
-                    }}
-                >
-                    ✦ &nbsp; portfolio &nbsp; ✦
-                </div>
+
 
                 {/* First name */}
                 <div
@@ -151,10 +182,37 @@ export default function IntroScreen({ onDone }: Props) {
                         height: '1.5px',
                         background: 'var(--blue-accent)',
                         opacity: 0.35,
-                        margin: '2rem auto 0',
+                        margin: '2rem auto 1.8rem',
                         animation: 'introFadeIn 0.8s ease 0.5s both',
                     }}
                 />
+
+                {/* ── Typewriter title ── */}
+                <div
+                    className="font-courier"
+                    style={{
+                        fontSize: 'clamp(0.75rem, 1.6vw, 1rem)',
+                        letterSpacing: '0.18em',
+                        textTransform: 'uppercase',
+                        color: 'var(--ink-light)',
+                        minHeight: '1.6em',
+                        animation: 'introFadeIn 0.6s ease 0.7s both',
+                    }}
+                >
+                    {display}
+                    {/* blinking caret */}
+                    <span
+                        style={{
+                            display: 'inline-block',
+                            width: '2px',
+                            height: '0.9em',
+                            background: 'var(--blue-accent)',
+                            marginLeft: '2px',
+                            verticalAlign: 'middle',
+                            animation: 'hintPulse 0.9s step-start infinite',
+                        }}
+                    />
+                </div>
             </div>
 
             {/* ── Scroll hint ── */}
